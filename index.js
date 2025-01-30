@@ -77,8 +77,22 @@ for (let i = 0; i < posts.length; i++){
 for (let i = 0; i < likeBtn.length; i++){
     likeBtn[i].addEventListener('click', e => renderLikes(i))
 }
-for (let i = 0; i < postImg.length; i++){
-    postImg[i].addEventListener('dblclick', e => renderLikes(i))
+for (let i = 0; i < postImg.length; i++) {
+    let lastTap = 0;
+    const doubleTapDelay = 300; // Max time between taps (milliseconds)
+
+    postImg[i].addEventListener("dblclick", () => renderLikes(i)); // Desktop support
+
+    postImg[i].addEventListener("touchend", function (event) {
+        let currentTime = new Date().getTime();
+        let tapLength = currentTime - lastTap;
+
+        if (tapLength < doubleTapDelay && tapLength > 0) {
+            renderLikes(i); // Double-tap detected
+        }
+
+        lastTap = currentTime;
+    });
 }
 function renderLikes(i){
     if (!posts[i].likedPost){
